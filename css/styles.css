@@ -10827,4 +10827,7 @@ textarea.form-control-lg {
 .user{
   max-width: 720px;
 }
-.user h1{text-transform: uppercase; text-align: center;padding: 20px 10px;}
+.user h1{text-transform: uppercase; text-align: center; padding: 20px 10px;}
+img{
+  max-width: 100%;
+}

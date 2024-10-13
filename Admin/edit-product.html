@@ -285,17 +285,17 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-menu-button-wide"></i><span>San Pham</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-menu-button-wide"></i><span>Sản phẩm</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="product-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav" style="">
           <li></li>
           <a href="product-list.html">
-            <i class="bi bi-circle"></i><span>Danh sach san pham</span>
+            <i class="bi bi-circle"></i><span>Danh sách sản phẩm</span>
           </a>
       </li>
       <li>
         <a href="addproduct.html">
-          <i class="bi bi-circle"></i><span>Them moi san pham</span>
+          <i class="bi bi-circle"></i><span>Thêm mới sản phẩm</span>
         </a>
       </li>
     </ul>
@@ -323,7 +323,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Cap nhat sản phẩm</h5>
+              <h5 class="card-title">Thêm mới sản phẩm</h5>
 
               <!-- Horizontal Form -->
               <form id="addproduct" method="post">
@@ -352,13 +352,11 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary">Cap nhat</button>
+                  <button type="submit" class="btn btn-primary">Thêm mới</button>
                 </div>
               </form><!-- End Horizontal Form -->
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -382,61 +380,49 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
   <script>
-   const pname=document.getElementById('name')
-   const pimage=document.getElementById('image')
-   const pprice=document.getElementById('price')
-   const pdescription=document.getElementById('description')
-   const queryString=window.location.search
-   const params=new URLSearchParams(queryString)
-   //console.log(params.get('id'));
-   const productId =params.get('id')
-   //Viet ham call API lay thong tin san pham
-   const getProductById=async(productId)=>{
-    try{
-const response=await fetch(` http://localhost:3000/products/${productId}`)
-const {name,image,price,description}=await response.json()
-console.log(name)
-pname.value=name
-pimage.value=image
-pprice.value=price
-pdescription.value=description
-    } catch(error){
-
-    }
-   }
-   getProductById(productId)
-
-   //update
-   const frmProduct = document.getElementById('addproduct')
-    frmProduct.addEventListener('submit',async (e) => {
+    // console.log(name,image,price,description);
+    // Truy cập phần form
+    const frmProduct = document.getElementById('addproduct')
+    frmProduct.addEventListener('submit', async (e) => {
       e.preventDefault()
-      const name = pname.value
-      const image = pimage.value
-      const price = pprice.value
-      const description = pdescription.value
+      const name = document.getElementById('name').value
+      const image = document.getElementById('image').value
+      const price = document.getElementById('price').value
+      const description = document.getElementById('description').value
+      
       try {
-        if(checkValidate(name,image,price)){
-        await fetch(`http://localhost:3000/products/${productId}`, {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({name, image, price, description})
-        }).then(value=>{
-          window.location='product-list.html'
-          alert('Cap nhat thanh cong')
-        }
-
-        )
-        
-      }
-      else throw new Error('Ten,anh khong duowc de trong, gia>0')
+        if (checkvalidates(name, image, price)) {
+            await fetch('http://localhost:3000/products', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, image, price, description })
+            })
+            alert('Thêm mới thành công')
+          } else {
+            throw new Error('Tên ảnh kh để trống, giá lớn hơn không')
+          }
       } catch (error) {
         alert(error)
       }
     })
-    const checkValidate=(name,image,price)=>{
-      //su dung bieu thuc AND && cua short-circuiting
-      return name.trim().length>0&& image.trim().length>0&& !isNaN(price)&&price>0
+    const checkvalidates = (name, image, price) => {
+      //su dung bieu thuc AND && cua short circuiting 
+      //trim() trống khoảng trắng 
+      //isNan là số thì phải thêm dấu châm than còn kh có dấu chấm than thì kiểm tra có phải kiểu chuỗi hay kh not a number
+      return name.trim().length > 0 && image.trim().length > 0 && !isNaN(price) && price > 0
     }
   </script>
 </body>
